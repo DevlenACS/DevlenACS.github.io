@@ -1,0 +1,55 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-family: sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    background: #ccc;
+  }
+  
+  article {
+    width: 210mm;
+    height: 297mm;
+    margin: 20px auto;
+    position: relative;
+    background-color: white;
+    background-image: url(top-image.png), url(bottom-image.png), linear-gradient(0deg, rgba(255,255,255,1)5%, rgba(120,120,120,0.40)95%);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top, bottom;
+    border-top: 1px solid red;
+    border-bottom: 1px solid red;
+    
+    
+  }
+  
+  address {
+    position: absolute;
+    bottom: 8mm;
+    right: 20mm;
+  }
+  
+  h1 {
+    position: absolute;
+    top: 12mm;
+    left: 20mm;
+    width: 128px;
+    height: 128px;
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 44px 0;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    background-image: url(logo.png);
+    background-color: black;
+    background-position: 0px, top -10 px, left -10 px;
+    
+  }
+  
+  /* Your CSS below here */
+
