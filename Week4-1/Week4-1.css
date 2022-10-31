@@ -47,9 +47,11 @@
     text-shadow: 1px 1px 1px black;
     background-image: url(logo.png);
     background-color: black;
-    background-position: 0px, top -10 px, left -10 px;
+    box-shadow: 1px 1px 1px 3px black;
+    border-radius: 50%;
     
   }
-  
+
+
   /* Your CSS below here */
 
