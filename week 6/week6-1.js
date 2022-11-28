@@ -1,5 +1,8 @@
 // setup canvas
 
+const paragraph = document.querySelector('p');
+let count = 0;
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -19,16 +22,29 @@ function randomRGB() {
   return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
 
-class Ball {
-    constructor(x, y, velX, velY, color, size){
-
-    this.x = x;
-    this.y = y;
-    this.velX = velX;
-    this.velY = velY;
-    this.color = color;
-    this.size = size;
+class Shape {
+    constructor(x, y, velX, velY) {
+        this.x = x;
+        this.y = y;
+        this.velX = velX;
+        this.velY = velY;
     }
+}
+
+class Ball extends Shape {
+
+    constructor(x, y, velX, velY, color, size){
+        super(x, y, velX, velY);
+
+        this.color = color;
+        this.size = size;
+
+        //it will exist, so start it existing
+
+        this.exists = true;
+
+    
+        }
 
     draw() {
         ctx.beginPath();
@@ -61,7 +77,7 @@ class Ball {
 
     smash() {
         for (const ball of balls) {
-            if (this !== ball) {
+            if (this !== ball && ball.exists) {
                 const diffX = this.x - ball.x;
                 const diffY = this.y - ball.y;
                 const distance = Math.sqrt((diffX * diffX)+(diffY * diffY));
@@ -74,49 +90,85 @@ class Ball {
     }
 }
 
-class Evil {
-    constructor(x, y){
+class Evil extends Shape {
+    constructor(x, y) {
+        super(x, y, 20, 20)
 
-        this.x = x;
-        this.y = y;
-        this.velX = 20;
-        this.velY = 20;
         this.color = "white";
         this.size = 10;
+
+        window.addEventListener('keydown', (e) => {
+            switch(e.key) {
+              case 'a':
+                this.x -= this.velX;
+                break;
+              case 'd':
+                this.x += this.velX;
+                break;
+              case 'w':
+                this.y -= this.velY;
+                break;
+              case 's':
+                this.y += this.velY;
+                break;
+            }
+          });
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 3;
+        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+        ctx.stroke();
+    }
+
+    checkBorder() {
+        //add size to the x so that it cant go through the borders
+
+        if ((this.x + this.size) >= width) {
+            this.x -= this.size;
         }
-    
-        draw() {
-            ctx.beginPath();
-            ctx.fillStyle = this.color;
-            ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-            ctx.fill();
-    
-    
+
+        if ((this.x - this.size) <= 0) {
+            this.x += this.size;
         }
-        
-        
-        window.addEventListener("keypress", (e) => {
-            console.log(e.code);
-            // switch (e.key) {
-            //   case "a":
-            //     this.x -= this.velX;
-            //     break;
-            //   case "d":
-            //     this.x += this.velX;
-            //     break;
-            //   case "w":
-            //     this.y -= this.velY;
-            //     break;
-            //   case "s":
-            //     this.y += this.velY;
-            //     break;
-            // }
-          };
+
+        if ((this.y + this.size) >= height) {
+            this.y -= this.size;
         }
+
+        if ((this.y - this.size) <= 0) {
+            this.y += this.size;
+        }
+
+
+    }
+
+    smash() {
+        for (const ball of balls) {
+            if (ball.exists) {
+                const diffX = this.x - ball.x;
+                const diffY = this.y - ball.y;
+                const distance = Math.sqrt((diffX * diffX) + (diffY * diffY));
+
+                if (distance < this.size + ball.size) {
+                    ball.exists = false;
+                    count--;
+                    paragraph.textContent = "Ball count: " + count;
+
+                }
+            }
+
+
+        }
+    }
+
+}
 const balls = [];
 
-while (balls.length < 50 ) {
-    const size = random(20,40)
+while (balls.length < 25 ) {
+    const size = random(10, 20)
     const ball = new Ball(
         random(size, width - size),
         random(size, height - size),
@@ -127,21 +179,29 @@ while (balls.length < 50 ) {
     );
 
     balls.push(ball);
+    count++;
+    paragraph.textContent = "Ball count: " + count;
 }
+
+const evilBall = new Evil(random(0,width), random(0, height));
 
 function loop() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
     ctx.fillRect(0, 0, width, height);
 
     for (const ball of balls) {
+        if (ball.exists)
         ball.draw();
         ball.update();
         ball.smash();
-    }
+        }
+    evilBall.draw();
+    evilBall.checkBorder();
+    evilBall.smash();
 
     requestAnimationFrame(loop);
 }
 
-// loop();
+loop();
 
 
