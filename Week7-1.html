@@ -6,12 +6,31 @@
 </head>
 <body>
     <h1>Spotify Web Playback SDK Quick Start</h1>
+    
+    <button id="prevButton">Previous</button>
+    
     <button id="togglePlay">Toggle Play</button>
+
+    <button id="nextButton">Next</button>
+
+   
 
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script>
+        var http = require('http');
+
+        http
+            .createServer(function(request, response) {
+                response.writeHead(200, {'Content-Type': 'text/plain'});
+                response.write("heya");
+                response.end();
+
+            })
+            
+            .listen(8888);
+
         window.onSpotifyWebPlaybackSDKReady = () => {
-            const token = 'BQBNH4dzubsi714N2Xs8X7xcDbEEpV20zIh28IFELPdLWUgauVHFwNj04A4PxN3odUxICrymtqTPaJ-_c21eAibOdCM3cQMcSZ_5VqkRfPqhAysnU-ssLIz33Nfmq0F-oqRZgtz4GOeDKS_KsdnUHS02AeP68U3HXlNCV6hsUISu92uZByfT7G76cdcY9biPjYE';
+            const token = 'BQDNeFCwYAjj8uYYJvxu8SI0QmE_gaC9PkvDUPv8FLdzAWKi_9S1Q6R7KhNum36AnlbpXw3KhK4tqHX4LbIQgLORoeMxcrokvheHmeRrcY0Gi9Yk3jle9NSfVJ2OFpO710pXu-5OM8sMPUjmKrDb5kuDpb1272Aq_eK0AHhlglbiGciqdcuyjGgzlLgplUcjqLw';
             const player = new Spotify.Player({
                 name: 'Web Playback SDK Quick Start Player',
                 getOAuthToken: cb => { cb(token); },
@@ -44,8 +63,19 @@
               player.togglePlay();
             };
 
+            document.getElementById('nextButton').onclick = function() {
+                player.nextTrack();
+            };
+
+            document.getElementById('prevButton').onclick = function() {
+                player.previousTrack();
+            };
+
             player.connect();
+        
         }
+
+
     </script>
 </body>
 </html>
